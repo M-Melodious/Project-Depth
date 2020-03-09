@@ -44,7 +44,7 @@ The Project is Divided into two phases :
 For the model development phase the steps to be followed are briefly Described below with reference to the paper .
 However the work has to be done from Scratch since no Dataset are formal Code for the framework has been released.
 
-### PHASE13 : MODEL DEVELOPMENT.
+### PHASE 1 : MODEL DEVELOPMENT.
 
 
 1.Data Collection and Annotation -There are two Dataset used for this project.
@@ -72,7 +72,7 @@ We describe a method to compute a global image water level from the individual o
 For the calculation of the global water level we compute the trimmed mean of the predicted levels of the different object instances.
 Once the model is trained and evaluated it needs to be Deployed. 
 
-### Phase2 : Model Deployment.
+### Phase 2 : Model Deployment.
 
 
 •	The main motive of using the Edge Technology behind the deployment of this Project is it’s use case, Disaster Prone Areas almost get disconnected from the outer world .
@@ -146,7 +146,9 @@ The file `download.gradle` directs gradle to download the two models used in the
 ![ConfigPic2](https://github.com/DemocraticAI/Project-Depth/blob/master/images/2and.PNG)
 
 
-• Step 3:	Install and run the app:
+• Step 3:
+
+Install and run the app:
 Connect the Android device to the computer and be sure to approve any ADB permission prompts that appear on your phone. Select `Run -> Run app`. Select the deployment target in the connected devices to the device on which the app will be installed. This will install the app on the device.
 
 ![ConfigPic3](https://github.com/DemocraticAI/Project-Depth/blob/master/images/3and.PNG)
