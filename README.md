@@ -90,7 +90,8 @@ Consequenty, we chose TensorFlow Lite for our purpose.
 
 Below Figure shows a Guided Pipeline of the Deployment Process.
 
-![Deployment Architecture](https://github.com/DemocraticAI/Project-Depth/blob/master/images/tflite%20arch.PNG)*Model Architecture*
+![Deployment Architecture](https://github.com/DemocraticAI/Project-Depth/blob/master/images/tflite%20arch.PNG)
+*Deployment Model Architecture*
 
 The Phases Of Deployment Can be divided into the following steps:
 
@@ -178,9 +179,27 @@ Output Obtained
 
 ![output](https://github.com/DemocraticAI/Project-Depth/blob/master/Output/done1.PNG)
 
+## CONTRIBUTORS
+
+- [र ेv3n](https://www.linkedin.com/in/mehra-deepak/)
+- [Dimeji Mudele](https://www.linkedin.com/in/dimejimudele/)
+- [Jemish Mavani]
+
+We are a passionate group of AI enthusiast trying to learn more about AI and implement it for social good.
+
+## FINAL NOTE
+
+We would like to Thank Udacity for giving us such nice opportunity to test what we have learnt in the Scholarship Program and present out project in the Showcase Challenge.
+
+
+
 ## REFERENCES
 
-https://www.tensorflow.org/lite
+- Chaudhary, Priyanka, et al. "Flood-Water Level Estimation from Social Media Images." ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences 4.2/W5 (2019): 5-12.
+
+- Okoli, Kenechukwu, et al. "Design Flood Estimation: Exploring the Potentials and Limitations of Two Alternative Approaches." Water 11.4 (2019): 729.
+ 
+- https://www.tensorflow.org/lite
 
 - https://www.analyticsvidhya.com/blog/2019/07/computer-vision-implementing-mask-r-cnn-image-segmentation/
 
@@ -190,6 +209,4 @@ https://www.tensorflow.org/lite
 
 - https://www.tensorflow.org/lite/guide/android
 
-- Chaudhary, Priyanka, et al. "Flood-Water Level Estimation from Social Media Images." ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences 4.2/W5 (2019): 5-12.
 
-- Okoli, Kenechukwu, et al. "Design Flood Estimation: Exploring the Potentials and Limitations of Two Alternative Approaches." Water 11.4 (2019): 729.
