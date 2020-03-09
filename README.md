@@ -44,20 +44,21 @@ The Project is Divided into two phases :
 For the model development phase the steps to be followed are briefly Described below with reference to the paper .
 However the work has to be done from Scratch since no Dataset are formal Code for the framework has been released.
 
+### PHASE2 : MODEL DEVELOPMENT.
 
 
 1.Data Collection and Annotation -There are two Dataset used for this project.
 
--In order to feed the annotated datasets to the network, we use MS COCO object detection 	annotation format (COCO, n.d.). We extract the information for various fields from the 		annotated image and generate mask for each object instance using MS COCO API.The annotations 	are stored using JSON .
+- In order to feed the annotated datasets to the network, we use MS COCO object detection 	annotation format (COCO, n.d.). We extract the information for various fields from the 		annotated image and generate mask for each object instance using MS COCO API.The annotations 	are stored using JSON .
 
--The second dataset is a custom build flood Dataset which contains images of flood instances from around the globe collected and compiled by utilizing the publicly available datasets and images from the web.The dataset will be annotated pixelwise, using an online annotation tool called Supervisely.
+- The second dataset is a custom build flood Dataset which contains images of flood instances from around the globe collected and compiled by utilizing the publicly available datasets and images from the web.The dataset will be annotated pixelwise, using an online annotation tool called Supervisely.
 
 2.Annotation  Strategy - In order to train our neural network we need the images in our training dataset to be labeled for all the four quantities we want to predict. As the goal of this study is to quantify flood-water level based on objects partially submerged in water, the first step for defining the annotation strategy is to decide which objects we should consider for the classification task. The criteria for selecting the objects for this task are: easy availability, known dimensions, and low intra-class height variance. By easy availability, we mean objects which are common in the real world, so that it is easy to gather a large number of pictures containing the object, both for training and prediction. Known dimensions refer to the fact that height, length and width of an object are approximately known. Finally low variation in height means that several instances of the same object in the real world have approximately the same height. For instance, bicycles are objects that are extremely common in urban environments, we roughly know their size, and their height is roughly constant across different models. Based on the criteria we decided to consider these five classes of objects: Person, Car, Bus, Bicycle, and House. In addition to the five classes mentioned above, we also consider the flood class, which represents flood-water present in the image.
 The one label we are missing is the one for the water level prediction. To obtain this label we need a course of action to quantify the flood-water height. As humans cannot just by looking at an image deduce the centimetres of flood-water, we decided to pursue a strategy that tries to estimate how much of an object body is submerged in water in terms of some coarsely defined levels. Since the main concern in case of floods is to prevent human fatalities, it makes sense to consider the human size as main building block for this prediction. We consider 11 flood levels, levels go from 0, which means no water, to 10, which represents a human body of average height completely submerged in water. Moreover, since in order to create the training dataset, we need to annotate manually the images with water level information, it is important to select levels that facilitate this operation. The height of the different levels is then inspired by drawing artists who use head height as the building block for the human figure. To map level classes to actual flood height, we consider an average height human body and derive the water height in cm, see Table 1. We can now extend the annotation strategy to the other four different classes of objects by considering their average height. After getting an approximate estimate of the height of these objects in the real world, we compare them with the average human height, on which the 11 flood levels are defined, and extend the flood level definition to these other objects. In below figure we show how, the flood levels defined for a human body, translate for an average size Bicycle.
 
 ![Respective Comparison](https://github.com/DemocraticAI/Project-Depth/blob/master/images/man.PNG)
 
-![Estimate Conversion Table] (https://github.com/DemocraticAI/Project-Depth/blob/master/images/level.PNG)
+![Estimate Conversion Table](https://github.com/DemocraticAI/Project-Depth/blob/master/images/level.PNG)
 
 
 3.	Neural Network Architecture : In this section, we describe the deep learning approach used for flood-water level estimation. We use Mask R-CNN as base architecture which is a state-of-the-art solution for instance segmentation. Below Figure illustrates the overall architecture of the method. The backbone of the architecture works as the main feature extractor. We can use any standard convolutional neural network. The idea is to pass an image through various layers which extract different features from the image. The lower layers detect low-level features like blobs, edges. As we move to higher layers, they start detecting full objects like cars, people, buses. The input image gets converted to feature maps in this module for an easier handling in the other modules. The above described backbone can be improved upon using Feature Pyramid Network(FPN) which was introduced by the same authors of Mask R-CNN .FPN represents objects at multiple scales better by passing the high level features from first pyramid down to lower layers of second pyramid. This allows features to have access to both lower and higher level features. We use ResNet101 and FPN as our backbone.
@@ -71,51 +72,64 @@ We describe a method to compute a global image water level from the individual o
 For the calculation of the global water level we compute the trimmed mean of the predicted levels of the different object instances.
 Once the model is trained and evaluated it needs to be Deployed. 
 
-Phase2 : Model Deployment.
+### Phase2 : Model Deployment.
 
 
 •	The main motive of using the Edge Technology behind the deployment of this Project is it’s use case, Disaster Prone Areas almost get disconnected from the outer world .
+
 •	Being able to process the image in runtime within fraction of second is another advantage here.
+
 •	Optimization software, especially made for specific hardware, can help achieve great efficiency with edge AI models
+
 •	Disaster can occur anywhere be it Rich or Poor State hence being able to deploy an affordable solution becomes a mandate in such scenarios.
+
 We wanted to deploy our model specifically on mobile or hand sets to make it easy and out reachable to the maximum of the people and locations,however after hobnobbing for a while in the Intel’s Toolkit of OpenVINO we unfortunately could not figure out the methodology of deployment of model on mobile phones as so far it does not allows it.
 
 So to make it happen we choose TensorFlow Lite for our purpose ,
 The Phases Of Deployment Can be divided into the following steps:
 
 Below Figure shows a Guided Pipeline of the Deployment Process.
+
 ![Deployment Architecture](https://github.com/DemocraticAI/Project-Depth/blob/master/images/tflite%20arch.PNG)
 
 Pre-processing :
-1)	Model Conversion:
+
+1)	Model Conversion
+
 Since we have created our own model here we need to pass our trained model for the process of Conversion. TensorFlow Lite is designed to execute models efficiently on mobile and other embedded devices with limited compute and memory resources. Some of this efficiency comes from the use of a special format for storing models. TensorFlow models must be converted into this format before they can be used by TensorFlow Lite.
 Converting models reduces their file size and introduces optimizations that do not affect accuracy. The TensorFlow Lite converter provides options that allow you to further reduce file size and increase speed of execution, with some trade-offs.
 TensorFlow Lite converter
-The TensorFlow Lite converter is a tool available as a Python API that converts trained TensorFlow models into the TensorFlow Lite format. It can also introduce optimizations, which are covered in section 4, Optimize your model.
+The TensorFlow Lite converter is a tool available as a Python API that converts trained TensorFlow models into the TensorFlow Lite format. It can also introduce optimizations, which are covered in section 3, Optimize your model.
 
 
 
 
 2)	Run inference with the model
+
 Inference is the process of running data through a model to obtain predictions. It requires a model, an interpreter, and input data.
 TensorFlow Lite interpreter
 The TensorFlow Lite interpreter is a library that takes a model file, executes the operations it defines on input data, and provides access to the output.
 The interpreter works across multiple platforms and provides a simple API for running TensorFlow Lite models from Java, Swift, Objective-C, C++, and Python.
-	Android and iOS
-	The TensorFlow Lite interpreter is easy to use from both major mobile platforms.
-3)	Optimize your model:
+
+Android and iOS:The TensorFlow Lite interpreter is easy to use from both major mobile platforms.
+
+3)	Optimize your model
+
 TensorFlow Lite provides tools to optimize the size and performance of your models, often with minimal impact on accuracy. Optimized models may require slightly more complex training, conversion, or integration. The goal of model optimization is to reach the ideal balance of performance, model size, and accuracy on a given device.
 We choose Quantization as a process of optimization for our purpose of Optimzation.
+- Quantization reduces the precision of values and operations within a model, quantization can reduce both the size of model and the time required for inference. For many models, there is only a minimal loss of accuracy.
 
-Quantization reduces the precision of values and operations within a model, quantization can reduce both the size of model and the time required for inference. For many models, there is only a minimal loss of accuracy.
 TensorFlow Lite supports reducing precision of values from full floating point to half-precision floats (float16) or 8-bit integers. There are trade-offs in model size and accuracy for each choice, and some operations have optimized implementations for these reduced precision types.
+
 Deployment in Hardware:
 For now we are showing the deployment process for Android only with reference to Android Studio,likewise the deployment can be done in iOS as well.
+
 1)	Accessing the Model : Downloading, extracting, and placing the model in the assets folder is managed automatically by download.gradle.
 2)	Build and Run:
+
 •	Step 1: Clone the TensorFlow examples source code.
 Clone the TensorFlow examples GitHub repository to your computer to get the demo application.
-git clone https://github.com/tensorflow/examples
+git clone https://github.com/model
 Open the TensorFlow source code in Android Studio. To do this, open Android Studio and select Open an existing project, setting the folder to examples/lite/examples/image_classification/android
 
 ![ConfigPic1](https://github.com/DemocraticAI/Project-Depth/blob/master/images/1and.PNG)
