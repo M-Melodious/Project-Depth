@@ -91,6 +91,7 @@ Consequenty, we chose TensorFlow Lite for our purpose.
 Below Figure shows a Guided Pipeline of the Deployment Process.
 
 ![Deployment Architecture](https://github.com/DemocraticAI/Project-Depth/blob/master/images/tflite%20arch.PNG)
+
 *Deployment Model Architecture*
 
 The Phases Of Deployment Can be divided into the following steps:
