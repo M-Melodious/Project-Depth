@@ -41,7 +41,8 @@ The Project is Divided into two phases :
 
 •	Deployment of Project at the Edge.
 
-For the model development phase the steps to be followed are briefly Described below with reference to the paper .
+For the model development phase the steps to be followed are briefly Described below with reference to the paper while the deployment on edge is something that has never been done before.
+
 However the work has to be done from Scratch since no Dataset are formal Code for the framework has been released.
 
 ### PHASE 1 : MODEL DEVELOPMENT.
@@ -163,6 +164,18 @@ The process of Intel OpenVINO toolkit has been showed below.
 
 ![OpenVINO toolkit process for Edge](https://github.com/DemocraticAI/Project-Depth/blob/master/images/Capture.PNG)
 ![Inference Engine](https://github.com/DemocraticAI/Project-Depth/blob/master/images/INFERENCE%20ENGINE.PNG)
+
+# RESULT
+
+The Result from reference to the paper can be expected as :
+
+Input Image 
+
+![raw_image1](https://github.com/DemocraticAI/Project-Depth/blob/master/Input/raw1.PNG)
+
+Output Obtained
+
+![output](https://github.com/DemocraticAI/Project-Depth/blob/master/Output/done1.PNG)
 
 ## REFERENCES
 
