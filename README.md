@@ -184,7 +184,7 @@ Output Obtained
 
 - [र ेv3n](https://www.linkedin.com/in/mehra-deepak/)
 - [Dimeji Mudele](https://www.linkedin.com/in/dimejimudele/)
-- [Jemish Mavani]
+- [Jemish Mavani](https://www.linkedin.com/in/jemish-mavani/)
 
 We are a passionate group of AI enthusiast trying to learn more about AI and implement it for social good.
 
