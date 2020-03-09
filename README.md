@@ -136,8 +136,12 @@ Connect the Android device to the computer and be sure to approve any ADB permis
 ![ConfigPic4](https://github.com/DemocraticAI/Project-Depth/blob/master/images/and.PNG)
 
 
+With Intel’s OpenVINO toolkit everystep remains same and can be followed for same project for other hardware devices, the architecture of which has been given below however the model deployment at Android was not possible.
 
+The process of Intel OpenVINO toolkit has been showed below.
 
+![OpenVINO toolkit process for Edge](https://github.com/DemocraticAI/Project-Depth/blob/master/images/Capture.PNG)
+![Inference Engine](https://github.com/DemocraticAI/Project-Depth/blob/master/images/INFERENCE%20ENGINE.PNG)
 
 ## REFERENCES
 https://www.analyticsvidhya.com/blog/2019/07/computer-vision-implementing-mask-r-cnn-image-segmentation/
