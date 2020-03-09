@@ -1,0 +1,10 @@
+
+-  Android Studio 3.2 (installed on a Linux, Mac or Windows machine)
+
+- Android device in developer mode with USB debugging enabled
+
+- USB cable (to connect Android device to your computer)
+
+- TensorFlow 2.0
+
+- OpenVINO toolkit

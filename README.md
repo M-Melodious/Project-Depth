@@ -8,11 +8,12 @@ developing parts of the world, thus exposing the most vulnerable people on plane
 Major causes of flood events include heavy rainfall, high tides and human factors such as deforestation, 
 poor waste management, irregular urbanization, among others. With the aggravating effects of climate change 
 set to rise in the coming years, 
-flooding risks might also become significant in developed countries.
+flooding risks might also become significant in developed countries. Flood level estimation is useful in
+the design of flood defence structures.
 
 Since the risks of flood are majorly concentrated in low-resource countries, 
 solutions and ways of managing this problem must also be of very low cost. 
-One very revevant intervention is the use of available data sources to track human falalities and direct intervention and rescue operations.
+One very relevant intervention is the use of available data sources to track human falalities and direct intervention and rescue operations.
 In the past, remotely sensed data from satellites have been used to retrieve  flood-water level from the disaster areas. 
 This technique, though inexpensive, doesn't provide near real-time monitoring capabilities. This is because freely available remotely sensed
  data which are usable for this purpose are available at relatively low temporal resolution. 
@@ -37,61 +38,61 @@ We describe our processing and modeling pipeline and the final edge application 
 
 The Project is Divided into two phases :
 
-•	Development of Deep Learning Framework
+•	Development of Deep Learning Framework (Model Development)
 
-•	Deployment of Project at the Edge.
+•	Deployment of Project at the Edge (Model Deployment)
 
-For the model development phase the steps to be followed are briefly Described below with reference to the paper while the deployment on edge is something that has never been done before.
+For the model development phase the steps to be followed are briefly Described below with reference to this paper. We extend what has been done
+with deployment on the edge. We do all the work from scratch since no Dataset are formal Code for the framework has been released.
 
-However the work has to be done from Scratch since no Dataset are formal Code for the framework has been released.
-
-### PHASE 1 : MODEL DEVELOPMENT.
+### PHASE 1 : Model Development.
 
 
-1.Data Collection and Annotation -There are two Dataset used for this project.
+1.Data Collection and Annotation -There are two dataset groups used for this project.
 
-- In order to feed the annotated datasets to the network, we use MS COCO object detection 	annotation format (COCO, n.d.). We extract the information for various fields from the 		annotated image and generate mask for each object instance using MS COCO API.The annotations 	are stored using JSON .
+- In order to feed the annotated datasets to the network, we use MS COCO object detection annotation format (COCO, n.d.). We extract the information for various fields from the annotated image and generate mask for each object instance using MS COCO API.The annotations are stored using JSON .
 
-- The second dataset is a custom build flood Dataset which contains images of flood instances from around the globe collected and compiled by utilizing the publicly available datasets and images from the web.The dataset will be annotated pixelwise, using an online annotation tool called Supervisely.
+- The second dataset are custom collected and annotated flood Dataset which contain images of flood instances from around the globe, collected and compiled by utilizing the publicly available datasets and images from the web. This dataset will be annotated pixelwise using an online annotation tool called [Supervisely](https://supervise.ly/). This is stage of the work is currently ongoing as at the time of this commit.
 
 2.Annotation  Strategy - In order to train our neural network we need the images in our training dataset to be labeled for all the four quantities we want to predict. As the goal of this study is to quantify flood-water level based on objects partially submerged in water, the first step for defining the annotation strategy is to decide which objects we should consider for the classification task. The criteria for selecting the objects for this task are: easy availability, known dimensions, and low intra-class height variance. By easy availability, we mean objects which are common in the real world, so that it is easy to gather a large number of pictures containing the object, both for training and prediction. Known dimensions refer to the fact that height, length and width of an object are approximately known. Finally low variation in height means that several instances of the same object in the real world have approximately the same height. For instance, bicycles are objects that are extremely common in urban environments, we roughly know their size, and their height is roughly constant across different models. Based on the criteria we decided to consider these five classes of objects: Person, Car, Bus, Bicycle, and House. In addition to the five classes mentioned above, we also consider the flood class, which represents flood-water present in the image.
-The one label we are missing is the one for the water level prediction. To obtain this label we need a course of action to quantify the flood-water height. As humans cannot just by looking at an image deduce the centimetres of flood-water, we decided to pursue a strategy that tries to estimate how much of an object body is submerged in water in terms of some coarsely defined levels. Since the main concern in case of floods is to prevent human fatalities, it makes sense to consider the human size as main building block for this prediction. We consider 11 flood levels, levels go from 0, which means no water, to 10, which represents a human body of average height completely submerged in water. Moreover, since in order to create the training dataset, we need to annotate manually the images with water level information, it is important to select levels that facilitate this operation. The height of the different levels is then inspired by drawing artists who use head height as the building block for the human figure. To map level classes to actual flood height, we consider an average height human body and derive the water height in cm, see Table 1. We can now extend the annotation strategy to the other four different classes of objects by considering their average height. After getting an approximate estimate of the height of these objects in the real world, we compare them with the average human height, on which the 11 flood levels are defined, and extend the flood level definition to these other objects. In below figure we show how, the flood levels defined for a human body, translate for an average size Bicycle.
+The one label we are missing is the one for the water level prediction. To obtain this label we need a course of action to quantify the flood-water height. As humans cannot just by looking at an image deduce the centimetres of flood-water, we decided to pursue a strategy that tries to estimate how much of an object body is submerged in water in terms of some coarsely defined levels. Since the main concern in case of floods is to prevent human fatalities, it makes sense to consider the human size as main building block for this prediction. We consider 11 flood levels, levels go from 0, which means no water, to 10, which represents a human body of average height completely submerged in water. Moreover, since in order to create the training dataset, we need to annotate manually the images with water level information, it is important to select levels that facilitate this operation. The height of the different levels is then inspired by drawing artists who use head height as the building block for the human figure. To map level classes to actual flood height, we consider an average height human body and derive the water height in centimeters, see Table 1. We then extend the annotation strategy to the other four different classes of objects by considering their average height. After getting an approximate estimate of the height of these objects in the real world, we compare them with the average human height, on which the 11 flood levels are defined, and extend the flood level definition to these other objects. In below figure we show how, the flood levels defined for a human body, translate for an average size Bicycle.
 
 ![Respective Comparison](https://github.com/DemocraticAI/Project-Depth/blob/master/images/man.PNG)
 
-![Estimate Conversion Table](https://github.com/DemocraticAI/Project-Depth/blob/master/images/level.PNG)
+![Estimate Conversion Table](https://github.com/DemocraticAI/Project-Depth/blob/master/images/level.PNG)*Table 1: Height estimate conversion table*
 
 
-3.	Neural Network Architecture : In this section, we describe the deep learning approach used for flood-water level estimation. We use Mask R-CNN as base architecture which is a state-of-the-art solution for instance segmentation. Below Figure illustrates the overall architecture of the method. The backbone of the architecture works as the main feature extractor. We can use any standard convolutional neural network. The idea is to pass an image through various layers which extract different features from the image. The lower layers detect low-level features like blobs, edges. As we move to higher layers, they start detecting full objects like cars, people, buses. The input image gets converted to feature maps in this module for an easier handling in the other modules. The above described backbone can be improved upon using Feature Pyramid Network(FPN) which was introduced by the same authors of Mask R-CNN .FPN represents objects at multiple scales better by passing the high level features from first pyramid down to lower layers of second pyramid. This allows features to have access to both lower and higher level features. We use ResNet101 and FPN as our backbone.
+3.	Neural Network Architecture : In this section, we describe the deep learning approach used for flood-water level estimation. We use Mask R-CNN as base architecture which is a state-of-the-art solution for instance segmentation. Below Figure illustrates the overall architecture of the method. The backbone of the architecture works as the main feature extractor. We can use any standard convolutional neural network. The idea is to pass an image through various layers which extract different features from the image. The lower layers detect low-level features like blobs, edges, etc. As we move to higher layers, they start detecting full objects like cars, people, buses. The input image gets converted to feature maps in this module for an easier handling in the other modules. The above described backbone can be improved upon using Feature Pyramid Network(FPN) which was introduced by the same authors of Mask R-CNN .FPN represents objects at multiple scales better by passing the high level features from first pyramid down to lower layers of second pyramid. This allows features to have access to both lower and higher level features. We use ResNet101 and FPN as our backbone.
 
 ![Deep Learning Neural Network Architecture](https://github.com/DemocraticAI/Project-Depth/blob/master/images/architecture.PNG)
 
 
-4.	Evaluation Strategy : As our network generates four different predictions (class, bounding box, level, and mask prediction) but ultimately we only care about the level prediction, we need to separate the performance of the object detector and level classifier. There can be two scenarios: False Positive(FP) and False Negative(FN) detections. If an object instance is not detected, there will also be no level predictions. In simple terms, the ground-truth file stores for every image, the bounding box, class label, level label, and mask, for all object instances present in the image. During prediction, if one or more of these object instance(s) is not detected there will also be no level label prediction. This scenario corresponds to the False Negative(FN) case. Similarly, False Positive cases are also a possibility, in this case an object detector wrongly detects background (image area where no object lies) as an object and predicts a class label for background. If a class of an object is wrongly predicted, it is also considered a FP case.
+4.	Evaluation Strategy : As our network generates four different predictions (class, bounding box, level, and mask prediction) but ultimately we only care about the level prediction. Thus, we need to separate the performance of the object detector and level classifier. There can be two scenarios: False Positive(FP) and False Negative(FN) detections. If an object instance is not detected, there will also be no level predictions. In simple terms, the ground-truth file stores for every image, the bounding box, class label, level label, and mask, for all object instances present in the image. During prediction, if one or more of these object instance(s) is not detected there will also be no level label prediction. This scenario corresponds to the False Negative(FN) case. Similarly, False Positive cases are also a possibility, in this case an object detector wrongly detects background (image area where no object lies) as an object and predicts a class label for background. If a class of an object is wrongly predicted, it is also considered a FP case.
 We describe a method to compute a global image water level from the individual object predictions. The reason for doing this is that for our purpose, we ultimately do not need a level value for each object instance, as it is too detailed, but an overall score for the entire image might be sufficient. The question that obviously arises is why not just train the network to give a single value for every image. At first we investigated this naive approach which, however, performed poorly. It is in fact very complicated to predict directly a water level for the entire image.
 
 For the calculation of the global water level we compute the trimmed mean of the predicted levels of the different object instances.
-Once the model is trained and evaluated it needs to be Deployed. 
+Once the model is trained and evaluated, we will then proceed to deployment. 
 
 ### Phase 2 : Model Deployment.
 
 
-•	The main motive of using the Edge Technology behind the deployment of this Project is it’s use case, Disaster Prone Areas almost get disconnected from the outer world .
+•	The main motive of using the Edge technology behind the deployment of this Project is it’s use case since disaster prone areas sometimes can get disconnected from the outer world .
 
-•	Being able to process the image in runtime within fraction of second is another advantage here.
+•	Being able to process the image in runtime within fraction of second is another advantage.
 
-•	Optimization software, especially made for specific hardware, can help achieve great efficiency with edge AI models
+•	Optimization software, especially made for specific hardware, can help achieve great efficiency with edge AI models.
 
-•	Disaster can occur anywhere be it Rich or Poor State hence being able to deploy an affordable solution becomes a mandate in such scenarios.
+•	Disaster can occur anywhere, hence being able to deploy an affordable solution becomes a mandate in such scenarios.
 
-We wanted to deploy our model specifically on mobile or hand sets to make it easy and out reachable to the maximum of the people and locations,however after hobnobbing for a while in the Intel’s Toolkit of OpenVINO we unfortunately could not figure out the methodology of deployment of model on mobile phones as so far it does not allows it.
+We wanted to deploy our model specifically on mobile or handsets to make it easy and out reachable to the maximum of the people and locations, however after hobnobbing for a while in the Intel’s Toolkit of OpenVINO we unfortunately could not figure out the methodology of deployment of model on mobile phones as so far it does not allow for such (as far as we know).
+Consequenty, we chose TensorFlow Lite for our purpose.
 
-So to make it happen we choose TensorFlow Lite for our purpose ,
-The Phases Of Deployment Can be divided into the following steps:
 
 Below Figure shows a Guided Pipeline of the Deployment Process.
 
-![Deployment Architecture](https://github.com/DemocraticAI/Project-Depth/blob/master/images/tflite%20arch.PNG)
+![Deployment Architecture](https://github.com/DemocraticAI/Project-Depth/blob/master/images/tflite%20arch.PNG)*Model Architecture*
+
+The Phases Of Deployment Can be divided into the following steps:
 
 Pre-processing :
 
@@ -114,7 +115,7 @@ The interpreter works across multiple platforms and provides a simple API for ru
 
 Android and iOS:The TensorFlow Lite interpreter is easy to use from both major mobile platforms.
 
-3)	Optimize your model
+3)	Optimize the model
 
 TensorFlow Lite provides tools to optimize the size and performance of your models, often with minimal impact on accuracy. Optimized models may require slightly more complex training, conversion, or integration. The goal of model optimization is to reach the ideal balance of performance, model size, and accuracy on a given device.
 We choose Quantization as a process of optimization for our purpose of Optimzation.
@@ -167,7 +168,7 @@ The process of Intel OpenVINO toolkit has been showed below.
 
 # RESULT
 
-The Result from reference to the paper can be expected as :
+The results from our reference [paper](https://www.isprs-ann-photogramm-remote-sens-spatial-inf-sci.net/IV-2-W5/5/2019/isprs-annals-IV-2-W5-5-2019.pdf) are shown below. Our results are expected to look similar to them, with differences expected due to edge deployment quantization losses.
 
 Input Image 
 
@@ -181,11 +182,14 @@ Output Obtained
 
 https://www.tensorflow.org/lite
 
-https://www.analyticsvidhya.com/blog/2019/07/computer-vision-implementing-mask-r-cnn-image-segmentation/
+- https://www.analyticsvidhya.com/blog/2019/07/computer-vision-implementing-mask-r-cnn-image-segmentation/
 
-https://www.analyticsvidhya.com/blog/2018/07/building-mask-r-cnn-model-detecting-damage-cars-python/
+- https://www.analyticsvidhya.com/blog/2018/07/building-mask-r-cnn-model-detecting-damage-cars-python/
 
-https://towardsdatascience.com/region-of-interest-pooling-f7c637f409af
+- https://towardsdatascience.com/region-of-interest-pooling-f7c637f409af
 
-https://www.tensorflow.org/lite/guide/android
+- https://www.tensorflow.org/lite/guide/android
 
+- Chaudhary, Priyanka, et al. "Flood-Water Level Estimation from Social Media Images." ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences 4.2/W5 (2019): 5-12.
+
+- Okoli, Kenechukwu, et al. "Design Flood Estimation: Exploring the Potentials and Limitations of Two Alternative Approaches." Water 11.4 (2019): 729.
