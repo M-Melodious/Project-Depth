@@ -44,7 +44,7 @@ The Project is Divided into two phases :
 For the model development phase the steps to be followed are briefly Described below with reference to the paper .
 However the work has to be done from Scratch since no Dataset are formal Code for the framework has been released.
 
-### PHASE2 : MODEL DEVELOPMENT.
+### PHASE13 : MODEL DEVELOPMENT.
 
 
 1.Data Collection and Annotation -There are two Dataset used for this project.
@@ -128,30 +128,32 @@ For now we are showing the deployment process for Android only with reference to
 2)	Build and Run:
 
 •	Step 1: Clone the TensorFlow examples source code.
+
 Clone the TensorFlow examples GitHub repository to your computer to get the demo application.
-git clone https://github.com/model
-Open the TensorFlow source code in Android Studio. To do this, open Android Studio and select Open an existing project, setting the folder to examples/lite/examples/image_classification/android
+`git clone https://github.com/model`
+
+Open the TensorFlow source code in Android Studio. To do this, open Android Studio and select Open an existing project, setting the folder to `examples/lite/examples/image_classification/android`
 
 ![ConfigPic1](https://github.com/DemocraticAI/Project-Depth/blob/master/images/1and.PNG)
 
 
 
-•	Build the Android Studio Project
-Select Build -> Make Project and check that the project builds successfully. You will need Android SDK configured in the settings. You'll need at least SDK version 23. 
+• Step 2:	Build the Android Studio Project.
 
-The build.gradle file will prompt you to download any missing libraries.
-The file download.gradle directs gradle to download the two models used in the example, placing them into assets.
+Select `Build -> Make Project` and check that the project builds successfully. You will need Android SDK configured in the settings. You'll need at least SDK version 23. The `build.gradle` file will prompt you to download any missing libraries.
+The file `download.gradle` directs gradle to download the two models used in the example, placing them into assets.
 
 ![ConfigPic2](https://github.com/DemocraticAI/Project-Depth/blob/master/images/2and.PNG)
 
 
-•	Install and run the app:
-Connect the Android device to the computer and be sure to approve any ADB permission prompts that appear on your phone. Select Run -> Run app. Select the deployment target in the connected devices to the device on which the app will be installed. This will install the app on the device.
+• Step 3:	Install and run the app:
+Connect the Android device to the computer and be sure to approve any ADB permission prompts that appear on your phone. Select `Run -> Run app`. Select the deployment target in the connected devices to the device on which the app will be installed. This will install the app on the device.
 
 ![ConfigPic3](https://github.com/DemocraticAI/Project-Depth/blob/master/images/3and.PNG)
 
 ![ConfigPic4](https://github.com/DemocraticAI/Project-Depth/blob/master/images/and.PNG)
 
+To test the app, open the app called `TFL Classify` on your device. When you run the app the first time, the app will request permission to access the camera. Re-installing the app may require you to uninstall the previous installations.
 
 With Intel’s OpenVINO toolkit everystep remains same and can be followed for same project for other hardware devices, the architecture of which has been given below however the model deployment at Android was not possible.
 
@@ -161,8 +163,14 @@ The process of Intel OpenVINO toolkit has been showed below.
 ![Inference Engine](https://github.com/DemocraticAI/Project-Depth/blob/master/images/INFERENCE%20ENGINE.PNG)
 
 ## REFERENCES
+
+https://www.tensorflow.org/lite
+
 https://www.analyticsvidhya.com/blog/2019/07/computer-vision-implementing-mask-r-cnn-image-segmentation/
 
 https://www.analyticsvidhya.com/blog/2018/07/building-mask-r-cnn-model-detecting-damage-cars-python/
 
 https://towardsdatascience.com/region-of-interest-pooling-f7c637f409af
+
+https://www.tensorflow.org/lite/guide/android
+
